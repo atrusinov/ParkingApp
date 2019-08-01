@@ -31,9 +31,12 @@ namespace ParkingApp.Web.Controllers
             return View(parkingViewModel);
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public IActionResult ParkCar(int level)
         {
-            return View();
+            var parkedCarInfo = _parkingService.ParkCar(level);
+
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

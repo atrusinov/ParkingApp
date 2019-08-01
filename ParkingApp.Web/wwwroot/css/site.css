@@ -54,3 +54,23 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
 }
+span.takenSpot {
+    background: #FF0000;
+    color: #ffffff;
+    display: inline-block;
+    font-weight: bold;    
+    margin: 5px;
+    text-align: center;
+    width: 37px;
+    padding: 5px;
+}
+span.freeSpot {
+    background: #008000;     
+    color: #ffffff;
+    display: inline-block;
+    font-weight: bold;   
+    margin: 5px;
+    text-align: center;
+    width: 37px;
+    padding: 5px;
+}

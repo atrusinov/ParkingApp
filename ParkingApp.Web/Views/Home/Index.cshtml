@@ -4,5 +4,60 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Parking Lot v1</h1>    
+    <h1 class="display-4">Parking Lot v1</h1>
 </div>
+
+<div class="text-center">
+    <a asp-area="" asp-controller="Home" asp-action="About">Park a car</a>
+</div>
+
+@foreach (var floor in Model.ParkingLevels)
+{
+    <p><strong>Level @floor.Level</strong></p>
+    <button type="button" class="btn btn-primary" onclick="parkCar(@floor.Level)">Park Car</button>
+    <button type="button" class="btn btn-primary" onclick="parkCar(@floor.Level)">Fill Parking Floor</button>
+    <button type="button" class="btn btn-danger" onclick="parkCar(@floor.Level)">Depark Car</button>
+    <button type="button" class="btn btn-danger" onclick="parkCar(@floor.Level)">Empty Parking Floor</button>
+    <hr />
+    foreach (var spot in floor.ParkingSlots.OrderBy(e => e.SpaceNumber))
+    {
+        if (spot.IsTaken)
+        {
+            <span class="takenSpot">@spot.SpaceNumber</span>
+        }
+        else
+        {
+            <span class="freeSpot">@spot.SpaceNumber</span>
+        }
+    }
+    <br />
+    <br />
+
+}
+
+@section Scripts {
+    <script type="text/javascript">        
+        function parkCar(level) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: `home/parkcar?level=${level}`, // <-- Where should this point?
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                error: function (xhr, status, errorThrown) {
+                    var err = "Status: " + status + " " + errorThrown;
+                    console.log(err);
+                }
+            }).done(function (data) {
+            })
+
+            setTimeout(
+                function () {
+                    window.location.reload(true);
+                }, 100);
+
+           
+        }
+    </script>
+
+}

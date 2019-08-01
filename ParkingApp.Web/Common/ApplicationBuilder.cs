@@ -24,7 +24,8 @@ namespace ParkingApp.Web.Common
 
                 if (!context.ParkingLots.Any())
                 {
-                    context.Add(CreateParkingLot(TOTAL_PARKING_LEVELS, TOTAL_PARKING_SPOTS, PARKING_NAME));
+                    var result = CreateParkingLot(TOTAL_PARKING_LEVELS, TOTAL_PARKING_SPOTS, PARKING_NAME);
+                    context.Add(result);
                     context.SaveChanges();
                 }
 
