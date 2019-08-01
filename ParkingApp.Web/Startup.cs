@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ParkingApp.Data;
 using ParkingApp.Web.Common;
+using ParkingApp.Services;
+using ParkingApp.Services.Contracts;
+
 
 namespace ParkingApp.Web
 {
@@ -26,19 +24,14 @@ namespace ParkingApp.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
+            
             services.AddDbContext<ParkingLotDbContext>(options =>
                options.UseSqlServer(
                    Configuration.
                    GetConnectionString("DefaultConnection")));
 
-            //services.AddScoped<IParkingService, ParkingLotService>();
+            services.AddScoped<IParkingService, ParkingLotService>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -54,8 +47,7 @@ namespace ParkingApp.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
-            app.UseCookiePolicy();
+            app.UseStaticFiles();            
             app.SeedDatabase();
             app.UseMvc(routes =>
             {

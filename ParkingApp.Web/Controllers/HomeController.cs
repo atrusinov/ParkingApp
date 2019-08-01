@@ -4,12 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ParkingApp.Services.Contracts;
 using ParkingApp.Web.Models;
 
 namespace ParkingApp.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IParkingService _parkingService;
+
+        public HomeController(IParkingService parkingService)
+        {
+            this._parkingService = parkingService;
+        }
+
         public IActionResult Index()
         {
             return View();

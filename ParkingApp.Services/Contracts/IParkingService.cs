@@ -1,11 +1,9 @@
 ﻿namespace ParkingApp.Services.Contracts
 {
-    interface IParkingService
+   public interface IParkingService
     {
         string ParkCar();
 
-        string DepartCar();
-
-        void SaveParkingState();
+        string DepartCar();        
     }
 }
