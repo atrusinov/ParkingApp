@@ -48,14 +48,14 @@ namespace ParkingApp.Web.Common
             return parkingLot;
         }
 
-        private static ICollection<ParkingSpaceModel> CreateParkingSlots(int spaces)
+        private static ICollection<ParkingSpaceModel> CreateParkingSlots(int totalSpaces)
         {
             var result = new List<ParkingSpaceModel>();
 
-            for (int currentSpace = 1; currentSpace <= spaces; currentSpace++)
+            for (int currentSpace = 1; currentSpace <= totalSpaces; currentSpace++)
             {
-                var space = new ParkingSpaceModel() { SpaceNumber = currentSpace };
-                result.Add(space);
+                var parkingSpace = new ParkingSpaceModel() { SpaceNumber = currentSpace };
+                result.Add(parkingSpace);
             }
 
             return result;

@@ -8,7 +8,7 @@ using ParkingApp.Data;
 using ParkingApp.Web.Common;
 using ParkingApp.Services;
 using ParkingApp.Services.Contracts;
-
+using AutoMapper;
 
 namespace ParkingApp.Web
 {
@@ -31,7 +31,7 @@ namespace ParkingApp.Web
                    GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IParkingService, ParkingLotService>();
-
+            services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

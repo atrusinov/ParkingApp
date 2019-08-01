@@ -6,7 +6,8 @@
         public int SpaceNumber { get; set; }
         public bool IsTaken { get; set; }
 
-        public ParkingLevelModel ParkingLevel { get; set; }
+       
+        public virtual ParkingLevelModel ParkingLevel { get; set; }
         public int ParkingLevelId { get; set; }
 
     }

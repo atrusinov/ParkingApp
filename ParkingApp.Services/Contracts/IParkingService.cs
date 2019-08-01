@@ -1,9 +1,13 @@
-﻿namespace ParkingApp.Services.Contracts
+﻿using ParkingApp.Services.DTOs;
+
+namespace ParkingApp.Services.Contracts
 {
    public interface IParkingService
     {
         string ParkCar();
 
-        string DepartCar();        
+        string DepartCar();
+
+        ParkingLotDTO GetParkingLot();
     }
 }

@@ -11,14 +11,14 @@ namespace ParkingApp.DAL
 
         public int Id { get; set; }
 
-        public ParkingLotModel ParkingLot { get; set; }
+        public virtual ParkingLotModel ParkingLot { get; set; }
         public int ParkingId { get; set; }
 
         public int Level { get; set; }
 
         public bool IsFull { get; set; }
 
-        public ICollection<ParkingSpaceModel> ParkingSlots { get; set; }
+        public virtual ICollection<ParkingSpaceModel> ParkingSlots { get; set; }
 
     }
 }

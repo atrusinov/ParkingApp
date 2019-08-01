@@ -10,7 +10,11 @@ namespace ParkingApp.Data
         public ParkingLotDbContext(DbContextOptions options) : base(options)
         {
 
-        }      
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+                             => optionsBuilder
+        .UseLazyLoadingProxies();
+
 
         public DbSet<ParkingLevelModel> ParkingLevels { get; set; }
         public DbSet<ParkingSpaceModel> ParkingSpaces { get; set; }

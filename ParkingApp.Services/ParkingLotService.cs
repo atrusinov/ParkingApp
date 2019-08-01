@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ParkingApp.DAL;
 using ParkingApp.Data;
 using ParkingApp.Services.Contracts;
+using ParkingApp.Services.DTOs;
+using System.Linq;
 
 namespace ParkingApp.Services
 {
@@ -26,9 +29,13 @@ namespace ParkingApp.Services
             throw new System.NotImplementedException();
         }
 
-        protected override ParkingLotModel GetParkingLot()
+        public ParkingLotDTO GetParkingLot()
         {
-            throw new System.NotImplementedException();
+            var getLot = DbContext.ParkingLots.FirstOrDefault();
+
+            var result = Mapper.Map<ParkingLotDTO>(getLot);
+
+            return result;
         }
     }
 }
