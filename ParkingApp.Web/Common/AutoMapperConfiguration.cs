@@ -16,6 +16,9 @@ namespace ParkingApp.Web.Common
             this.CreateMap<ParkingLotDTO,ParkingLotViewModel>().ReverseMap();
             this.CreateMap<ParkingLevelDTO, ParkingLevelViewModel>().ReverseMap();
             this.CreateMap<ParkingSpaceDTO, ParkingLevelSpacesViewModel>().ReverseMap();
+            this.CreateMap<FreeSpotDTO, ParkingLevelSpacesViewModel>().ReverseMap();
+            this.CreateMap<FreeSpotDTO, ParkingSpaceModel>().ReverseMap();
+
         }
     }
 }

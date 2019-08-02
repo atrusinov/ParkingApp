@@ -10,8 +10,9 @@ namespace ParkingApp.Web.Models.ParkingLot
         public ParkingLevelViewModel()
         {
             this.ParkingSlots = new List<ParkingLevelSpacesViewModel>();
-        }       
+        }
 
+        public int Id { get; set; }
         public int Level { get; set; }
 
         public bool IsFull { get; set; }

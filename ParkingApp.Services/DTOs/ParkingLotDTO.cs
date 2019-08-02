@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using ParkingApp.Services.Contracts;
+using System.Collections.Generic;
 
 namespace ParkingApp.Services.DTOs
 {
-    public class ParkingLotDTO
+    public class ParkingLotDTO : IParkingLot
     {
         public ParkingLotDTO()
         {
@@ -11,5 +12,6 @@ namespace ParkingApp.Services.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public ICollection<ParkingLevelDTO> ParkingLevels { get; set; }
+        
     }
 }

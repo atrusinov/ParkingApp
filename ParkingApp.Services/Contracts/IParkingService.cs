@@ -1,13 +1,19 @@
 ﻿using ParkingApp.Services.DTOs;
+using System.Collections.Generic;
 
 namespace ParkingApp.Services.Contracts
 {
-   public interface IParkingService
+    public interface IParkingService
     {
-        string ParkCar(int level);
+        ICarAction ParkRandomCar(int level);
 
-        string DepartCar(int level);
+        ICarAction RemoveRandomCar(int level);      
 
-        ParkingLotDTO GetParkingLot();
+        ICollection<int> FillOrEmpty(int command);
+
+        int ParkCarById(int id);
+        int RemoveCarById(int id);
+
+        IParkingLot GetParkingLot();
     }
 }

@@ -1,8 +1,13 @@
-﻿namespace ParkingApp.Services.DTOs
+﻿using ParkingApp.Services.Contracts;
+
+namespace ParkingApp.Services.DTOs
 {
-    public class FreeSpotDTO
+    public class FreeSpotDTO : ICarAction
     {
-        public int FreeSpot { get; set; }
-        public int Level { get; set; }
+        public int Id { get; set; }
+        public int SpaceNumber { get; set; }
+        public int ParkingLevelId { get; set; }
+        public bool isFull { get; set; }
+        public string Message { get; set; }
     }
 }

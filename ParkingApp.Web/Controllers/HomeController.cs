@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ParkingApp.Services.Contracts;
@@ -16,6 +12,7 @@ namespace ParkingApp.Web.Controllers
         private readonly IParkingService _parkingService;
         private readonly IMapper _mapper;
 
+
         public HomeController(IParkingService parkingService, IMapper mapper)
         {
             this._parkingService = parkingService;
@@ -24,19 +21,57 @@ namespace ParkingApp.Web.Controllers
 
         public IActionResult Index()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetData()
+        {
             var pakringLotDTO = _parkingService.GetParkingLot();
 
-            var parkingViewModel = _mapper.Map<ParkingLotViewModel>(pakringLotDTO);
-
-            return View(parkingViewModel);
+            return Json(pakringLotDTO);
         }
 
         [HttpPost]
         public IActionResult ParkCar(int level)
         {
-            var parkedCarInfo = _parkingService.ParkCar(level);
+            var parkedCarInfo = _parkingService.ParkRandomCar(level);
+            var viewResult = _mapper.Map<ParkingLevelSpacesViewModel>(parkedCarInfo);
 
-            return RedirectToAction("Index");
+            return Json(viewResult);
+        }
+
+        [HttpPost]
+        public IActionResult RemoveCar(int level)
+        {
+            var parkedCarInfo = _parkingService.RemoveRandomCar(level);
+            var viewResult = _mapper.Map<ParkingLevelSpacesViewModel>(parkedCarInfo);
+
+            return Json(viewResult);
+        }   
+
+        [HttpPost]
+        public IActionResult ParkCarById(int id)
+        {
+            var spaceNumberId=_parkingService.ParkCarById(id);
+
+            return Json(spaceNumberId);
+        }
+
+        [HttpPost]
+        public IActionResult RemoveCarById(int id)
+        {
+            var spaceNumberId = _parkingService.RemoveCarById(id);
+
+            return Json(spaceNumberId);
+        }      
+
+        [HttpPost]
+        public IActionResult FillOrEmptyParking(int fillOrEmpty)
+        {
+            var spacesForManipulation = _parkingService.FillOrEmpty(fillOrEmpty);
+
+            return Json(spacesForManipulation);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

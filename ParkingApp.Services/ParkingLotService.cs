@@ -1,49 +1,109 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using ParkingApp.DAL;
 using ParkingApp.Data;
 using ParkingApp.Services.Contracts;
 using ParkingApp.Services.DTOs;
-using System;
+using ParkingApp.Services.Enums;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ParkingApp.Services
 {
     public class ParkingLotService : BaseService, IParkingService
     {
+        private const string SUCCESS_PARK_MESSAGE = "A car has just parked on parking spot {0} on floor {1}.";
+        private const string FAULTY_PARK_MESSAGE = "The current floor is full!";
+        private const string REMOVE_CAR_FROM_PARK_SUCCESS = "A car has departed from parking spot {0} on floor {1}";
+        private const string REMOVE_CAR_FROM_PARK_FAULT = "All spots are free for parking!";
+
         public ParkingLotService(ParkingLotDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
-        public string DepartCar(int level)
+        public ICarAction RemoveRandomCar(int levelId)
         {
-            throw new System.NotImplementedException();
+            var freedSpot = DbContext.ParkingSpaces.Where(e => e.ParkingLevelId == levelId && e.IsTaken == true).FirstOrDefault();
+
+            if (freedSpot == null)
+            {
+                return new FreeSpotDTO()
+                {
+                    isFull = false,
+                    Message = REMOVE_CAR_FROM_PARK_FAULT
+                };
+            }
+
+            freedSpot.IsTaken = false;
+
+            DbContext.SaveChanges();
+
+            var result = Mapper.Map<FreeSpotDTO>(freedSpot);
+            result.Message = string.Format(REMOVE_CAR_FROM_PARK_SUCCESS, freedSpot.SpaceNumber, freedSpot.ParkingLevelId);
+
+            return result;
         }
 
-        public string ParkCar(int level)
+        public ICarAction ParkRandomCar(int level)
         {
             var parkingLevel = DbContext.ParkingLevels.FirstOrDefault(r => r.Level == level);
             var spot = FindFreeSpot(parkingLevel.Level);
 
-            DbContext.ParkingSpaces.Where(e => e.SpaceNumber == spot.FreeSpot && e.ParkingLevelId == spot.Level).FirstOrDefault().IsTaken = true;
+            if (!spot.isFull)
+            {
+                DbContext.ParkingSpaces.Where(e => e.SpaceNumber == spot.SpaceNumber && e.ParkingLevelId == spot.ParkingLevelId).FirstOrDefault().IsTaken = true;
+                DbContext.SaveChanges();
+            }
+
+            return spot;
+        }
+
+        public int ParkCarById(int id)
+        {
+            var takenSpace = DbContext.ParkingSpaces.Where(e => e.Id == id).FirstOrDefault();
+            takenSpace.IsTaken = true;
             DbContext.SaveChanges();
 
-            return "OK";
+            return takenSpace.Id;
+        }
+        public int RemoveCarById(int id)
+        {
+            var takenSpace = DbContext.ParkingSpaces.Where(e => e.Id == id).FirstOrDefault();
+            takenSpace.IsTaken = false;
+            DbContext.SaveChanges();
+
+            return takenSpace.Id;
         }
 
         private FreeSpotDTO FindFreeSpot(int parkingLevelId)
         {
-            var getAllFreeSpots = DbContext.ParkingSpaces.Where(e => e.IsTaken == false && e.ParkingLevelId == parkingLevelId).FirstOrDefault();
+            var getFreeSpot = DbContext.ParkingSpaces.Where(e => e.IsTaken == false && e.ParkingLevelId == parkingLevelId).FirstOrDefault();
+            if (getFreeSpot == null)
+            {
+                return new FreeSpotDTO()
+                {
+                    isFull = true,
+                    Message = FAULTY_PARK_MESSAGE
+                };
+            }
 
-            return new FreeSpotDTO() { FreeSpot = getAllFreeSpots.SpaceNumber, Level = getAllFreeSpots.ParkingLevelId };
-        }
+            return new FreeSpotDTO()
+            {
+                Id = getFreeSpot.Id,
+                SpaceNumber = getFreeSpot.SpaceNumber,
+                ParkingLevelId = getFreeSpot.ParkingLevelId,
+                Message = string.Format(SUCCESS_PARK_MESSAGE, getFreeSpot.SpaceNumber, getFreeSpot.ParkingLevelId)
+            };
+        }        
 
-        public void SaveParkingState()
+        public ICollection<int> FillOrEmpty(int command)
         {
-            throw new System.NotImplementedException();
-        }
+            if ((ParkingCommands)command == ParkingCommands.Empty)
+            {
+                return DbContext.ParkingSpaces.Where(e => e.IsTaken == true).Select(e => e.Id).ToArray();
+            }
 
-        public ParkingLotDTO GetParkingLot()
+            return DbContext.ParkingSpaces.Where(e => e.IsTaken == false).Select(e => e.Id).ToArray();
+        }
+        public IParkingLot GetParkingLot()
         {
             var getLot = DbContext.ParkingLots.FirstOrDefault();
 
