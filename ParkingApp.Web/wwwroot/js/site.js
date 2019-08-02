@@ -6,7 +6,7 @@
 
     $.ajax({
         type: "POST",
-        url: `home/ParkCar?level=${level}`,
+        url: `home/ParkRandomCar?level=${level}`,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         error: function (xhr, status, errorThrown) {
@@ -14,7 +14,6 @@
             console.log(err);
         }
     }).done(function (data) {
-        
         $(`#output #${data.id}.freeSpot`).removeClass('freeSpot').addClass('takenSpot');
         notification.style = "block";
         notification.textContent = data.message;
@@ -22,7 +21,31 @@
 
 }
 
+function removeCar(level) {
+    let notification = document.querySelector("#notify");
+    notification.style = "none";
+    notification.textContent = "";
+
+    $.ajax({
+        type: "POST",
+        url: `home/RemoveRandomCar?level=${level}`,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        error: function (xhr, status, errorThrown) {
+            var err = "Status: " + status + " " + errorThrown;
+            console.log(err);
+        }
+    }).done(function (data) {
+
+        $(`#output #${data.id}.takenSpot`).removeClass('takenSpot').addClass('freeSpot');
+        notification.style = "block";
+        notification.textContent = data.message;
+    });
+
+}
+
 function parkCarById(id) {
+
 
     $.ajax({
         type: "POST",
@@ -51,32 +74,7 @@ function removeCarById(id) {
             console.log(err);
         }
     }).done(function (data) {
-        
         $(`#output #${data}.takenSpot`).removeClass('takenSpot').addClass('freeSpot');
-    });
-
-}
-
-function removeCar(level) {
-
-    let notification = document.querySelector("#notify");
-    notification.style = "none";
-    notification.textContent = "";
-
-    $.ajax({
-        type: "POST",
-        url: `home/RemoveCar?level=${level}`,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        error: function (xhr, status, errorThrown) {
-            var err = "Status: " + status + " " + errorThrown;
-            console.log(err);
-        }
-    }).done(function (data) {
-
-        $(`#output #${data.id}.takenSpot`).removeClass('takenSpot').addClass('freeSpot');
-        notification.style = "block";
-        notification.textContent = data.message;
     });
 
 }
@@ -117,16 +115,17 @@ function fillOrEmptyParking(command) {
 }
 
 window.onload = function () {
-    function GetData() {
+    function GetParkingLot() {
         $.ajax({
-            url: '/home/getdata',
+            url: '/home/GetParkingLot',
             type: 'GET',
             dataType: 'json',
             cache: false,
             success: function (response) {
-
+                //debugger;
+                const { parkingLevels } = response;
                 var el = $('#output');
-                for (var obj of response.parkingLevels) {
+                parkingLevels.forEach((obj) => {
                     let parkButton = `<button type="button" class="btn btn-primary" onclick="parkCar(${obj.level})">Park Car</button>`;
                     let removeButton = `<button type="button" class="btn btn-danger" onclick="removeCar(${obj.level})">Remove Car</button>`;
 
@@ -135,20 +134,17 @@ window.onload = function () {
                     el.append(removeButton);
                     el.append(`<hr\>`);
 
-                    for (var level of obj.parkingSlots.sort(function (a, b) { return a.spaceNumber - b.spaceNumber; })) {
-                        let currentSlot;
-                        if (level.isTaken) {
-                            currentSlot = `<span id="${level.id}" class="takenSpot">${level.spaceNumber}</span>`;
-                        }
-                        else {
-                            currentSlot = `<span id="${level.id}" class="freeSpot">${level.spaceNumber}</span>`;
-                        }
+                    obj.parkingSlots = obj.parkingSlots.sort(function (a, b) { return a.spaceNumber - b.spaceNumber; });
+                    const { level, parkingSlots } = obj;
+                    console.log(obj);
+                    
+                    parkingSlots.forEach(({ id,spaceNumber,isTaken}) => {
+                        const currentSlot = `<span id="${id}" class='${isTaken ? "takenSpot" : "freeSpot"}'>${spaceNumber}</span>`;
                         el.append(currentSlot);
-                    }
-
-                }
+                    });                    
+                });
             }
         });
     }
-    GetData();
+    GetParkingLot();
 };

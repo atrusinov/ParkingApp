@@ -25,7 +25,7 @@ namespace ParkingApp.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetData()
+        public IActionResult GetParkingLot()
         {
             var pakringLotDTO = _parkingService.GetParkingLot();
 
@@ -33,7 +33,7 @@ namespace ParkingApp.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult ParkCar(int level)
+        public IActionResult ParkRandomCar(int level)
         {
             var parkedCarInfo = _parkingService.ParkRandomCar(level);
             var viewResult = _mapper.Map<ParkingLevelSpacesViewModel>(parkedCarInfo);
@@ -42,7 +42,7 @@ namespace ParkingApp.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult RemoveCar(int level)
+        public IActionResult RemoveRandomCar(int level)
         {
             var parkedCarInfo = _parkingService.RemoveRandomCar(level);
             var viewResult = _mapper.Map<ParkingLevelSpacesViewModel>(parkedCarInfo);
