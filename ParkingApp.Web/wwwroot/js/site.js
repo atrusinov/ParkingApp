@@ -56,7 +56,6 @@ function fillOrEmptyParking(command) {
             console.log(err);
         }
     }).done(function (data) {
-        debugger;
         let simulationArray = shuffle(data);
 
         for (let i = 0; i < simulationArray.length; i++) {

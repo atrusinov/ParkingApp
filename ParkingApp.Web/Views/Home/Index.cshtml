@@ -1,4 +1,6 @@
-﻿@{
+﻿@using ParkingApp.Services.Enums
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -9,8 +11,8 @@
 <div id="notify" class="alert alert-primary alert-dismissible" role="alert" style="display:none">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
-<button type="button" class="btn btn-success" onclick="fillOrEmptyParking(2)">Empty Parking</button>
-<button type="button" class="btn btn-danger" onclick="fillOrEmptyParking(1)">Fill Parking</button>
+<button type="button" id="empty-parking" class="btn btn-success" onclick="fillOrEmptyParking(@((int)ParkingCommands.Empty))">Empty Parking</button>
+<button type="button" id="fill-parking" class="btn btn-danger" onclick="fillOrEmptyParking(@((int)ParkingCommands.Fill))">Fill Parking</button>
 <div id="output">
 </div>
 
