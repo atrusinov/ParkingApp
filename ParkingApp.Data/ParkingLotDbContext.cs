@@ -33,6 +33,10 @@ namespace ParkingApp.Data
                .WithOne(lot => lot.ParkingLot)
                .HasForeignKey(p => p.ParkingId);
 
+            builder.Entity<ParkingLevelModel>()
+                .HasIndex(l => l.Level)
+                .IsUnique();
+
             base.OnModelCreating(builder);
         }
 

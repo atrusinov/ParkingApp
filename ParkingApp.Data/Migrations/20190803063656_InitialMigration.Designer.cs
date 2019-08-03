@@ -9,8 +9,8 @@ using ParkingApp.Data;
 namespace ParkingApp.Data.Migrations
 {
     [DbContext(typeof(ParkingLotDbContext))]
-    [Migration("20190731211151_Init")]
-    partial class Init
+    [Migration("20190803063656_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,9 @@ namespace ParkingApp.Data.Migrations
                     b.Property<int>("ParkingId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Level")
+                        .IsUnique();
 
                     b.HasIndex("ParkingId");
 

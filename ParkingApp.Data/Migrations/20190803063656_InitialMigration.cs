@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ParkingApp.Data.Migrations
 {
-    public partial class Init : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,6 +61,12 @@ namespace ParkingApp.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParkingLevels_Level",
+                table: "ParkingLevels",
+                column: "Level",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ParkingLevels_ParkingId",

@@ -28,8 +28,9 @@ namespace ParkingApp.Web.Controllers
         public IActionResult GetParkingLot()
         {
             var pakringLotDTO = _parkingService.GetParkingLot();
+            var viewResult = _mapper.Map<ParkingLotViewModel>(pakringLotDTO);
 
-            return Json(pakringLotDTO);
+            return Json(viewResult);
         }
 
         [HttpPost]
@@ -53,7 +54,7 @@ namespace ParkingApp.Web.Controllers
         [HttpPost]
         public IActionResult FillOrEmptyParking(int fillOrEmpty)
         {
-            var spacesForManipulation = _parkingService.FillOrEmpty(fillOrEmpty);
+            var spacesForManipulation = _parkingService.FillOrEmpty(fillOrEmpty);       
 
             return Json(spacesForManipulation);
         }

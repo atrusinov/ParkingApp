@@ -32,6 +32,9 @@ namespace ParkingApp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Level")
+                        .IsUnique();
+
                     b.HasIndex("ParkingId");
 
                     b.ToTable("ParkingLevels");
