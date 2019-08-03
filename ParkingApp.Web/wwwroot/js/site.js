@@ -44,41 +44,6 @@ function removeCar(level) {
 
 }
 
-function parkCarById(id) {
-
-
-    $.ajax({
-        type: "POST",
-        url: `home/parkCarById?id=${id}`,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        error: function (xhr, status, errorThrown) {
-            var err = "Status: " + status + " " + errorThrown;
-            console.log(err);
-        }
-    }).done(function (data) {
-
-        $(`#output #${data}.freeSpot`).removeClass('freeSpot').addClass('takenSpot');
-    });
-
-}
-
-function removeCarById(id) {
-    $.ajax({
-        type: "POST",
-        url: `home/removeCarById?id=${id}`,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        error: function (xhr, status, errorThrown) {
-            var err = "Status: " + status + " " + errorThrown;
-            console.log(err);
-        }
-    }).done(function (data) {
-        $(`#output #${data}.takenSpot`).removeClass('takenSpot').addClass('freeSpot');
-    });
-
-}
-
 function fillOrEmptyParking(command) {
 
     $.ajax({
@@ -92,23 +57,18 @@ function fillOrEmptyParking(command) {
         }
     }).done(function (data) {
 
-        if (command === 1) {
-            for (let i = 0; i < data.length; i++) {
-                setTimeout(function (y) {
+        let simulationArray = shuffle(data);
 
-                    parkCarById(data[y]);
+        for (let i = 0; i < simulationArray.length; i++) {
 
-                }, i * 100, i);
-            }
-        }
-        else {
-            for (let i = 0; i < data.length; i++) {
-                setTimeout(function (y) {
-
-                    removeCarById(data[y]);
-
-                }, i * 100, i);
-            }
+            setTimeout(function (y) {
+                if (command === 1) {
+                    $(`#output #${simulationArray[i]}.freeSpot`).removeClass('freeSpot').addClass('takenSpot');
+                }
+                else {
+                    $(`#output #${simulationArray[i]}.takenSpot`).removeClass('takenSpot').addClass('freeSpot');
+                }
+            }, i * 10, i);
         }
     });
 
@@ -122,29 +82,42 @@ window.onload = function () {
             dataType: 'json',
             cache: false,
             success: function (response) {
-                //debugger;
                 const { parkingLevels } = response;
                 var el = $('#output');
-                parkingLevels.forEach((obj) => {
-                    let parkButton = `<button type="button" class="btn btn-primary" onclick="parkCar(${obj.level})">Park Car</button>`;
-                    let removeButton = `<button type="button" class="btn btn-danger" onclick="removeCar(${obj.level})">Remove Car</button>`;
+                parkingLevels.forEach((parkingLot) => {
+                    let parkButton = `<button type="button" class="btn btn-primary" onclick="parkCar(${parkingLot.level})">Park Car</button>`;
+                    let removeButton = `<button type="button" class="btn btn-danger" onclick="removeCar(${parkingLot.level})">Remove Car</button>`;
 
-                    el.append(`<p><strong>Level ${obj.level}</strong></p>`);
+                    el.append(`<p><strong>Level ${parkingLot.level}</strong></p>`);
                     el.append(parkButton);
                     el.append(removeButton);
                     el.append(`<hr\>`);
 
-                    obj.parkingSlots = obj.parkingSlots.sort(function (a, b) { return a.spaceNumber - b.spaceNumber; });
-                    const { level, parkingSlots } = obj;
-                    console.log(obj);
-                    
-                    parkingSlots.forEach(({ id,spaceNumber,isTaken}) => {
+                    parkingLot.parkingSlots = parkingLot.parkingSlots.sort(function (a, b) { return a.spaceNumber - b.spaceNumber; });
+                    const { level, parkingSlots } = parkingLot;
+
+                    parkingSlots.forEach(({ id, spaceNumber, isTaken }) => {
                         const currentSlot = `<span id="${id}" class='${isTaken ? "takenSpot" : "freeSpot"}'>${spaceNumber}</span>`;
                         el.append(currentSlot);
-                    });                    
+                    });
                 });
             }
         });
     }
     GetParkingLot();
 };
+
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    
+    while (0 !== currentIndex) {
+        
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;        
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}

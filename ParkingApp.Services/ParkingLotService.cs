@@ -54,24 +54,7 @@ namespace ParkingApp.Services
             }
 
             return spot;
-        }
-
-        public int ParkCarById(int id)
-        {
-            var takenSpace = DbContext.ParkingSpaces.Where(e => e.Id == id).FirstOrDefault();
-            takenSpace.IsTaken = true;
-            DbContext.SaveChanges();
-
-            return takenSpace.Id;
-        }
-        public int RemoveCarById(int id)
-        {
-            var takenSpace = DbContext.ParkingSpaces.Where(e => e.Id == id).FirstOrDefault();
-            takenSpace.IsTaken = false;
-            DbContext.SaveChanges();
-
-            return takenSpace.Id;
-        }
+        }     
 
         private FreeSpotDTO FindFreeSpot(int parkingLevelId)
         {
@@ -92,24 +75,36 @@ namespace ParkingApp.Services
                 ParkingLevelId = getFreeSpot.ParkingLevelId,
                 Message = string.Format(SUCCESS_PARK_MESSAGE, getFreeSpot.SpaceNumber, getFreeSpot.ParkingLevelId)
             };
-        }        
+        }
 
         public ICollection<int> FillOrEmpty(int command)
         {
-            if ((ParkingCommands)command == ParkingCommands.Empty)
+            using (DbContext)
             {
-                return DbContext.ParkingSpaces.Where(e => e.IsTaken == true).Select(e => e.Id).ToArray();
-            }
+                var fillOrEmpty = (ParkingCommands)command == ParkingCommands.Empty ? false : true;
 
-            return DbContext.ParkingSpaces.Where(e => e.IsTaken == false).Select(e => e.Id).ToArray();
+                var allEmptySpaces = DbContext.ParkingSpaces
+                    .Where(e => e.IsTaken == !fillOrEmpty)
+                    .ToList();
+
+                allEmptySpaces.ForEach(id => id.IsTaken = fillOrEmpty);
+
+                DbContext.SaveChanges();
+
+                return allEmptySpaces.Select(e => e.Id).ToArray();
+            }          
+
         }
         public IParkingLot GetParkingLot()
         {
-            var getLot = DbContext.ParkingLots.FirstOrDefault();
+            using (DbContext)
+            {
+                var getLot = DbContext.ParkingLots.FirstOrDefault();
 
-            var result = Mapper.Map<ParkingLotDTO>(getLot);
+                var result = Mapper.Map<ParkingLotDTO>(getLot);
 
-            return result;
-        }
+                return result;
+            }          
+        }     
     }
 }

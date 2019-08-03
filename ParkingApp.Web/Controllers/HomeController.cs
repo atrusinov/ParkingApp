@@ -48,23 +48,7 @@ namespace ParkingApp.Web.Controllers
             var viewResult = _mapper.Map<ParkingLevelSpacesViewModel>(parkedCarInfo);
 
             return Json(viewResult);
-        }   
-
-        [HttpPost]
-        public IActionResult ParkCarById(int id)
-        {
-            var spaceNumberId=_parkingService.ParkCarById(id);
-
-            return Json(spaceNumberId);
-        }
-
-        [HttpPost]
-        public IActionResult RemoveCarById(int id)
-        {
-            var spaceNumberId = _parkingService.RemoveCarById(id);
-
-            return Json(spaceNumberId);
-        }      
+        }       
 
         [HttpPost]
         public IActionResult FillOrEmptyParking(int fillOrEmpty)

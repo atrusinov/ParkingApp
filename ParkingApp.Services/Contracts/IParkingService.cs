@@ -1,5 +1,4 @@
-﻿using ParkingApp.Services.DTOs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ParkingApp.Services.Contracts
 {
@@ -9,10 +8,7 @@ namespace ParkingApp.Services.Contracts
 
         ICarAction RemoveRandomCar(int level);      
 
-        ICollection<int> FillOrEmpty(int command);
-
-        int ParkCarById(int id);
-        int RemoveCarById(int id);
+        ICollection<int> FillOrEmpty(int command);    
 
         IParkingLot GetParkingLot();
     }
