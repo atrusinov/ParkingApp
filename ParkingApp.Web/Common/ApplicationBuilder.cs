@@ -22,7 +22,7 @@ namespace ParkingApp.Web.Common
             using (scope)
             {
                 var context = scope.ServiceProvider.GetRequiredService<ParkingLotDbContext>();
-                context.Database.Migrate();
+                context.Database.Migrate(); // comment this line out if this is not the first time you are launching the app.
                 if (!context.ParkingLots.Any())
                 {
                     var result = CreateParkingLot(TOTAL_PARKING_LEVELS, TOTAL_PARKING_SPOTS, PARKING_NAME);
