@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ParkingApp.DAL;
 using ParkingApp.Data;
@@ -21,7 +22,7 @@ namespace ParkingApp.Web.Common
             using (scope)
             {
                 var context = scope.ServiceProvider.GetRequiredService<ParkingLotDbContext>();
-
+                context.Database.Migrate();
                 if (!context.ParkingLots.Any())
                 {
                     var result = CreateParkingLot(TOTAL_PARKING_LEVELS, TOTAL_PARKING_SPOTS, PARKING_NAME);
