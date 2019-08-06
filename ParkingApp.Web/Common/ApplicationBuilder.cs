@@ -32,14 +32,14 @@ namespace ParkingApp.Web.Common
             }
         }
 
-        private static ParkingLotModel CreateParkingLot(int totalLevels, int spaces, string parkingName)
+        private static ParkingLot CreateParkingLot(int totalLevels, int spaces, string parkingName)
         {
-            var parkingLot = new ParkingLotModel();
+            var parkingLot = new ParkingLot();
             parkingLot.Name = parkingName;
 
             for (int level = 1; level <= totalLevels; level++)
             {
-                var parkingLevel = new ParkingLevelModel();
+                var parkingLevel = new ParkingLevel();
                 parkingLevel.Level = level;
                 parkingLevel.ParkingSlots = CreateParkingSlots(spaces);
 
@@ -49,13 +49,13 @@ namespace ParkingApp.Web.Common
             return parkingLot;
         }
 
-        private static ICollection<ParkingSpaceModel> CreateParkingSlots(int totalSpaces)
+        private static ICollection<ParkingSpace> CreateParkingSlots(int totalSpaces)
         {
-            var result = new List<ParkingSpaceModel>();
+            var result = new List<ParkingSpace>();
 
             for (int currentSpace = 1; currentSpace <= totalSpaces; currentSpace++)
             {
-                var parkingSpace = new ParkingSpaceModel() { SpaceNumber = currentSpace };
+                var parkingSpace = new ParkingSpace() { SpaceNumber = currentSpace };
                 result.Add(parkingSpace);
             }
 
